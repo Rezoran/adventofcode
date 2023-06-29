@@ -2000,22 +2000,22 @@ dummyfile = """171
 3282"""
 
 def sum3(index, array):
-    return array[index]+array[index+1]+array[index+2]
+    return int(array[index])+int(array[index+1])+int(array[index+2])
 
 prev = None
-cnt = 1
+cnt = 0
 
 #with open("d1.1.data") as file:
 lineslist = dummyfile.splitlines()
 index = 0
 
-while True:
+while index+2 < len(lineslist):
 #for line in dummyfile.splitlines():
     line = sum3(index, lineslist)
-    print("line:", line)
+    #print("line:", line)
     if prev is not None:
         if line > prev:
-            print("cnt++ line:", line, "prev:", prev)
+            #print("cnt++ line:", line, "prev:", prev)
             cnt += 1
     prev = line
     index += 1
