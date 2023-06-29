@@ -1,4 +1,4 @@
-dummyfile = """171
+171
 173
 174
 163
@@ -1997,18 +1997,4 @@ dummyfile = """171
 3264
 3267
 3280
-3282"""
-
-prev = None
-cnt = 0
-
-#with open("d1.1.data") as file:
-for line in dummyfile.splitlines():
-    #print("line:", line)
-    if prev is not None:
-        if line > prev:
-            #print("cnt++ line:", line, "prev:", prev)
-            cnt += 1
-    prev = line
-
-print("cnt : ", cnt)
+3282
