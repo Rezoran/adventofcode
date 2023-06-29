@@ -2000,14 +2000,14 @@ dummyfile = """171
 3282"""
 
 prev = None
-cnt = 0
+cnt = 1
 
 #with open("d1.1.data") as file:
 for line in dummyfile.splitlines():
-    #print("line:", line)
+    print("line:", line)
     if prev is not None:
         if line > prev:
-            #print("cnt++ line:", line, "prev:", prev)
+            print("cnt++ line:", line, "prev:", prev)
             cnt += 1
     prev = line
 
