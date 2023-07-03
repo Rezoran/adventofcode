@@ -621,6 +621,7 @@ class bingoboard:
         #print("hitarray: ", self.hitarray)
         self.hitcnt = 0
         #print("hitcnt: ", self.hitcnt)
+        self.won = False
 
     def getUnmarkedSum(self) -> int:
         unmarkedSum = 0
@@ -657,6 +658,7 @@ class bingoboard:
                     foundBingo = True
                     break;
             if foundBingo is True:
+                self.won = True
                 return self.getUnmarkedSum()
             else: 
                 return -1
@@ -709,20 +711,20 @@ print("init done: boardscnt:", bingowins)
 for num in bingonumbers:
     print("calling num: ", num)
     for board in bingoboards:
-        ret = board.registerNumber(num)
-        if ret is not -1:
-            if bingowins is 1:
-                print(len(bingoboards))
-                print(board.boardarray)
-                print(board.hitcnt)
-                unmarkedSum = board.getUnmarkedSum()
-                print(unmarkedSum)
-                print("result: ", (num*unmarkedSum))
-                break
-            else:
-                bingowins -= 1
-                bingoboards.remove(board)
-                print("boards left: ", bingowins)
+        if board.won is False:
+            ret = board.registerNumber(num)
+            if ret is not -1:
+                if bingowins is 1:
+                    print(len(bingoboards))
+                    print(board.boardarray)
+                    print(board.hitcnt)
+                    unmarkedSum = board.getUnmarkedSum()
+                    print(unmarkedSum)
+                    print("result: ", (num*unmarkedSum))
+                    break
+                else:
+                    bingowins -= 1
+                    print("boards left: ", bingowins)
 
     else:
         continue
