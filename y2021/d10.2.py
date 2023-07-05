@@ -131,7 +131,7 @@ def findbracetype(input):
 def openbrace(input, index, bracetype):
     print("index: {}, bracetype: {}, val: {}".format(index, opening[bracetype], input[index]))
     if index >= len(input)-1:
-        return True, -1, None
+        return True, -1, closing[bracetype]
     else:
         ret = index+1
         while input[ret] in opening:
@@ -139,10 +139,14 @@ def openbrace(input, index, bracetype):
             err, ret, ret2 = openbrace(input, ret, t)
             print("index {}: got return: ".format(index), err, ret)
             if ret >= len(input):
-                return True, -1, None
+                return True, -1, closing[bracetype]
             if err is True:
-                print("index {}: found error: ".format(index), ret, ret2)
-                return err, ret, ret2
+                if ret == -2:
+                    print("index {}: found error: ".format(index), ret, ret2)
+                    return err, ret, ret2
+                else:
+                    print("index {}: found error: ".format(index), ret, ret2)
+                    return err, ret, (ret2+closing[bracetype])
             else:
                 print("index {}: found closing on: ".format(index), ret, input[ret])
                 #ret += 1
@@ -159,21 +163,23 @@ def openbrace(input, index, bracetype):
         
 linestatus = []
 try:
-    for line in input.splitlines():
+    for line in exdata.splitlines():
         t = findbracetype(line[0])
         err, ret, ret2 = openbrace(line, 0, t)
         linestatus.append(ret2)
 except Exception as e:
     print(e)
 print(linestatus)
-
+"""
 result = 0
 for elem in linestatus:
     if elem != None:
         type = findbracetype(elem)
         result += values[type]
 print("result: ", result)
-
+"""
 
 # [ ( { ( < ( ( ) ) [ ]  >  [  [  {  [  ]  {  <  (  )  <  >  >
 # 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+
+# TODO care for completely closed sections. after them the code stops executing the line (see line 2 of exdata)
