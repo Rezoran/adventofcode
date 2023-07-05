@@ -118,7 +118,7 @@ exdata = """[({(<(())[]>[[{[]{<()<>>
 
 opening = ["(", "{", "<", "["]
 closing = [")", "}", ">", "]"]
-values = [3, 1197, 25137, 57]
+values = [1, 3, 4, 2]
 
 def findbracetype(input):
     for i in range(len(opening)):
@@ -126,10 +126,10 @@ def findbracetype(input):
             #print("got {}, found {}".format(input, opening[i]))
             return i
 # returns True on error (-1 = incomplete, -2 = corrupted), False on closing with index
-#sample: (()()())
+#sample: (()()())(())
 
 def openbrace(input, index, bracetype):
-    print("index: {}, bracetype: {}, val: {}".format(index, opening[bracetype], input[index]))
+    #print("index: {}, bracetype: {}, val: {}".format(index, opening[bracetype], input[index]))
     if index >= len(input)-1:
         return True, -1, closing[bracetype]
     else:
@@ -137,49 +137,57 @@ def openbrace(input, index, bracetype):
         while input[ret] in opening:
             t = findbracetype(input[ret])
             err, ret, ret2 = openbrace(input, ret, t)
-            print("index {}: got return: ".format(index), err, ret)
+            #print("index {}: got return: ".format(index), err, ret)
             if ret >= len(input):
                 return True, -1, closing[bracetype]
             if err is True:
                 if ret == -2:
-                    print("index {}: found error: ".format(index), ret, ret2)
+                    #print("index {}: found error: ".format(index), ret, ret2)
                     return err, ret, ret2
                 else:
-                    print("index {}: found error: ".format(index), ret, ret2)
+                    #print("index {}: found error: ".format(index), ret, ret2)
                     return err, ret, (ret2+closing[bracetype])
-            else:
-                print("index {}: found closing on: ".format(index), ret, input[ret])
+            #else:
+                #print("index {}: found closing on: ".format(index), ret, input[ret])
                 #ret += 1
-        print("index {}: exited 'while' on ".format(index), ret, input[ret])
+        #print("index {}: exited 'while' on ".format(index), ret, input[ret])
     if input[ret] in closing:
         if closing[bracetype] != input[ret]:
-            print("type mismatch: ", closing[bracetype], input[ret])
+            #print("type mismatch: ", closing[bracetype], input[ret])
             return True, -2, input[ret]
         else:
-            print("index {}: returning ".format(index), ret, input[ret])
+            #print("index {}: returning ".format(index), ret, input[ret])
             return False, ret+1, None
     else:
         print("error lol")
         
 linestatus = []
 try:
-    for line in exdata.splitlines():
-        t = findbracetype(line[0])
-        err, ret, ret2 = openbrace(line, 0, t)
-        linestatus.append(ret2)
+    for line in input.splitlines():
+        err = False
+        startindex = 0
+        # While is needed for completely closed sections i.e. (())[[]]
+        while err is False and startindex < len(line):
+            t = findbracetype(line[startindex])
+            err, ret, ret2 = openbrace(line, startindex, t)
+            #print("mainloop got return: err: {}, ret: {}, ret2: {}".format(err,ret,ret2))
+            startindex = ret
+        if ret == -1:
+            linestatus.append(ret2)
 except Exception as e:
     print(e)
 print(linestatus)
-"""
-result = 0
+
+results = []
 for elem in linestatus:
-    if elem != None:
-        type = findbracetype(elem)
+    result = 0
+    for char in elem:
+        type = findbracetype(char)
+        result *= 5
         result += values[type]
-print("result: ", result)
-"""
-
-# [ ( { ( < ( ( ) ) [ ]  >  [  [  {  [  ]  {  <  (  )  <  >  >
-# 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
-
-# TODO care for completely closed sections. after them the code stops executing the line (see line 2 of exdata)
+    results.append(result)
+    #print("result: ", result)
+print("results: ", results)
+results.sort()
+print("results: ", results)
+print("middle: ", results[int(len(results)/2)])
